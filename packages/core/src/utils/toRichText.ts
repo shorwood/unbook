@@ -151,9 +151,14 @@ export function toRichText(value: MaybeRichText | undefined): RichText[] {
 
   // --- Convert AST nodes to RichText objects.
   const richTexts: RichText[] = []
-  for (const node of tree.children) {
-    if (node.type === 'paragraph')
+  for (let i = 0; i < tree.children.length; i++) {
+    const node = tree.children[i]
+    if (node.type === 'paragraph') {
+      // --- Add a newline between paragraphs (double newline in source becomes single newline).
+      if (richTexts.length > 0)
+        richTexts.push(createRichText('\n', null, {}))
       richTexts.push(...convertInlineNodes(node.children, {}))
+    }
   }
 
   // --- Fallback to plain text if no paragraphs were parsed.

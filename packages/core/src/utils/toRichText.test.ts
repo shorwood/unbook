@@ -197,5 +197,31 @@ describe('toRichText', () => {
       const result = toRichText('**bold**')
       expect(result[0]?.annotations.color).toBe('default')
     })
+
+    it('should convert double newlines to single newline between paragraphs', () => {
+      const result = toRichText('First paragraph\n\nSecond paragraph')
+      expect(result).toHaveLength(3)
+      expect(result[0]).toMatchObject({ plain_text: 'First paragraph' })
+      expect(result[1]).toMatchObject({ plain_text: '\n' })
+      expect(result[2]).toMatchObject({ plain_text: 'Second paragraph' })
+    })
+
+    it('should handle multiple paragraphs with newlines between them', () => {
+      const result = toRichText('First\n\nSecond\n\nThird')
+      expect(result).toHaveLength(5)
+      expect(result[0]).toMatchObject({ plain_text: 'First' })
+      expect(result[1]).toMatchObject({ plain_text: '\n' })
+      expect(result[2]).toMatchObject({ plain_text: 'Second' })
+      expect(result[3]).toMatchObject({ plain_text: '\n' })
+      expect(result[4]).toMatchObject({ plain_text: 'Third' })
+    })
+
+    it('should preserve formatting across paragraphs', () => {
+      const result = toRichText('**Bold text**\n\n*Italic text*')
+      expect(result).toHaveLength(3)
+      expect(result[0]).toMatchObject({ plain_text: 'Bold text', annotations: { bold: true } })
+      expect(result[1]).toMatchObject({ plain_text: '\n' })
+      expect(result[2]).toMatchObject({ plain_text: 'Italic text', annotations: { italic: true } })
+    })
   })
 })
