@@ -150,6 +150,21 @@ export class Workspace {
   }
 
   /**********************************************************/
+  /* Data Sources                                           */
+  /**********************************************************/
+
+  /**
+   * Gets a data source by its ID.
+   *
+   * @param id The ID of the data source to retrieve.
+   * @returns A promise that resolves to the retrieved data source.
+   */
+  async getDataSource(id: string): Promise<DataSource> {
+    const dataSource = await this.adapter.getDataSource(id)
+    return new DataSource(this.adapter, dataSource)
+  }
+
+  /**********************************************************/
   /* Users                                                  */
   /**********************************************************/
 
@@ -159,7 +174,7 @@ export class Workspace {
    * @param id The ID of the user to retrieve.
    * @returns A promise that resolves to the retrieved user.
    */
-  async getUser(id: string) {
+  async getUser(id: string): Promise<User> {
     const userData = await this.adapter.getUser(id)
     return new User(this.adapter, userData)
   }
@@ -171,7 +186,7 @@ export class Workspace {
    *
    * @returns A promise that resolves to the current user.
    */
-  async getCurrentUser() {
+  async getCurrentUser(): Promise<User> {
     const userData = await this.adapter.getCurrentUser()
     return new User(this.adapter, userData)
   }
