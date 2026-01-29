@@ -1,0 +1,30 @@
+{
+  "name": "@unbook/notion",
+  "type": "module",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rolldown --config rolldown.config.ts",
+    "dev": "rolldown --config rolldown.config.ts --watch",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@unbook/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@unshared/eslint-config": "0.8.0",
+    "rolldown": "1.0.0-rc.1",
+    "rolldown-plugin-dts": "0.21.7",
+    "typescript": "5.9.3"
+  }
+}

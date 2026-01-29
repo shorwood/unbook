@@ -1,0 +1,27 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "daemon": false,
+  "envMode": "loose",
+  "cacheDir": ".turbo/cache",
+  "remoteCache": {
+    "enabled": true,
+    "preflight": true
+  },
+  "globalDependencies": [
+    ".env"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "outputs": ["dist/**"],
+      "persistent": true
+    },
+    "lint": {
+      "outputs": []
+    }
+  }
+}

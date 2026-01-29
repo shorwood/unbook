@@ -1,0 +1,36 @@
+{
+  "name": "@unbook/monorepo",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "packageManager": "pnpm@10.26.1",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "turbo watch dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "test": "vitest --watch",
+    "test:ci": "vitest --run",
+    "test:types": "vitest --typecheck",
+    "test:coverage": "vitest --coverage",
+    "publish:ci": "uncli publish",
+    "release": "uncli release"
+  },
+  "devDependencies": {
+    "@types/node": "25.1.0",
+    "@unshared/eslint-config": "0.8.0",
+    "@unshared/scripts": "0.8.0",
+    "@vitest/ui": "4.0.18",
+    "commitlint": "20.3.1",
+    "eslint": "9.39.2",
+    "happy-dom": "20.4.0",
+    "memfs": "4.56.10",
+    "turbo": "2.8.0",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18"
+  }
+}

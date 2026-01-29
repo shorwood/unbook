@@ -1,0 +1,55 @@
+{
+  "name": "@unbook/core",
+  "type": "module",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Core types and utilities for Unbook - a unified book manipulation framework",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./entities": {
+      "types": "./dist/entities/index.d.ts",
+      "import": "./dist/entities/index.js",
+      "require": "./dist/entities/index.cjs"
+    },
+    "./shorthands": {
+      "types": "./dist/shorthands/index.d.ts",
+      "import": "./dist/shorthands/index.js",
+      "require": "./dist/shorthands/index.cjs"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "require": "./dist/types/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rolldown --config rolldown.config.ts",
+    "dev": "rolldown --config rolldown.config.ts --watch",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@unshared/string": "0.8.0",
+    "mdast-util-from-markdown": "2.0.2",
+    "mdast-util-gfm-strikethrough": "2.0.0",
+    "micromark-extension-gfm-strikethrough": "2.1.0"
+  },
+  "devDependencies": {
+    "@types/mdast": "4.0.4",
+    "@unshared/eslint-config": "0.8.0",
+    "@unshared/types": "0.8.0",
+    "rolldown": "1.0.0-rc.1",
+    "rolldown-plugin-dts": "0.21.7",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18"
+  }
+}

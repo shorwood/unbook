@@ -1,0 +1,36 @@
+name: CI
+permissions:
+  id-token: write
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  ci:
+    name: Continuous Integration & Deployment to Private Registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 10.x
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org/'
+
+      # --- Install, build, and test.
+      - run: pnpm install
+      - run: pnpm build
+      - run: pnpm lint:ci
+      - run: pnpm test:ci

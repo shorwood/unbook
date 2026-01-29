@@ -1,0 +1,46 @@
+# Outputs
+.output
+.data
+.nuxt
+.nitro
+.turbo
+.cache
+.coverage
+.assets
+dist
+components.d.ts
+auto-imports.d.ts
+.eslintcache
+
+# Dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+.bin
+/scripts/.*
+
+# Infrastructure
+.terraform*
+terraform.tfstate*
+*.tfvars
+certs
+charts/*/charts
+kubeconfig.yaml
+
+# Local env files
+.env
+.env.*
+!.env.example
+.remote-assets
+.vscode
+.direnv
+
+*storybook.log
+storybook-static
