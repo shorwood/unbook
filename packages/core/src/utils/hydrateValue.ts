@@ -12,13 +12,14 @@ function buildNameToKeyMap(options: Schema.SelectOptions | undefined): Map<strin
   const map = new Map<string, string>()
   if (!options) return map
 
+  // --- Array format: ['Low', 'Medium', 'High'] - name is the key
   if (Array.isArray(options)) {
-    // Array format: ['Low', 'Medium', 'High'] - name is the key
     for (const name of options)
       map.set(name, name)
   }
+
+  // --- Record format: { low: 'Low' | { label: 'Low' } }
   else {
-    // Record format: { low: 'Low' | { label: 'Low' } }
     for (const [key, value] of Object.entries(options)) {
       const name = typeof value === 'string' ? value : (value.label ?? key)
       map.set(name, key)

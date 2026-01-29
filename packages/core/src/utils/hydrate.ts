@@ -26,9 +26,10 @@ export function hydrate(
   for (const key of Object.keys(schema)) {
     const field = schema[key]
     const property = properties[field.label]
-    result[key] = property === undefined
-      ? undefined
-      : hydrateValue(property, field)
+    if (!property) continue
+    const value = hydrateValue(property, field)
+    if (value === undefined) continue
+    result[key] = value
   }
 
   // --- Return the hydrated record.
