@@ -168,6 +168,7 @@ export class Notion implements Adapter {
       const parameters = new URLSearchParams()
       if (cursor) parameters.set('start_cursor', cursor)
       const query = parameters.toString()
+      // eslint-disable-next-line sonarjs/no-nested-template-literals
       const response = await this.request<{ results: BlockObject[]; has_more: boolean; next_cursor: null | string }>('GET', `/v1/blocks/${id}/children${query ? `?${query}` : ''}`)
       for (const block of response.results) yield block
       cursor = response.has_more ? response.next_cursor ?? undefined : undefined

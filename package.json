@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
+  "author": "Stanley Horwood <stanley.horwood@nanoworks.io>",
+  "bugs": "https://github.com/shorwood/unbook/issues",
+  "homepage": "https://github.com/shorwood/unbook#readme",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shorwood/unbook.git"
+  },
   "packageManager": "pnpm@10.26.1",
   "engines": {
     "node": ">=20.0.0",
@@ -10,7 +17,7 @@
   },
   "scripts": {
     "dev": "turbo run dev --filter='!@unbook/docs'",
-    "build": "turbo run build",
+    "build": "turbo run build --filter='!@unbook/docs'",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "test": "vitest --watch",

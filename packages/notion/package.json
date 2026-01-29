@@ -1,7 +1,15 @@
 {
   "name": "@unbook/notion",
   "type": "module",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "author": "Stanley Horwood <stanley.horwood@nanoworks.io>",
+  "bugs": "https://github.com/shorwood/unbook/issues",
+  "homepage": "https://github.com/shorwood/unbook#readme",
+  "repository": {
+    "directory": "packages/notion",
+    "type": "git",
+    "url": "git@github.com:shorwood/unbook.git"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

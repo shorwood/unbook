@@ -3,7 +3,14 @@
   "type": "module",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "Core types and utilities for Unbook - a unified book manipulation framework",
+  "author": "Stanley Horwood <stanley.horwood@nanoworks.io>",
+  "bugs": "https://github.com/shorwood/unbook/issues",
+  "homepage": "https://github.com/shorwood/unbook#readme",
+  "repository": {
+    "directory": "packages/core",
+    "type": "git",
+    "url": "git@github.com:shorwood/unbook.git"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

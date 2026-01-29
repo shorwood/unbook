@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable sonarjs/no-nested-conditional */
 /* eslint-disable unicorn/no-null */
 import type { Property, Schema } from '@/types'

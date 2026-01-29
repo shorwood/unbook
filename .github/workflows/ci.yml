@@ -14,7 +14,7 @@ on:
 
 jobs:
   ci:
-    name: Continuous Integration & Deployment to Private Registry
+    name: Tests and Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,9 +28,7 @@ jobs:
           node-version: 22.x
           cache: pnpm
           registry-url: 'https://registry.npmjs.org/'
-
-      # --- Install, build, and test.
       - run: pnpm install
       - run: pnpm build
-      - run: pnpm lint:ci
+      - run: pnpm lint
       - run: pnpm test:ci

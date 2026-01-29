@@ -1,6 +1,5 @@
 {
   "name": "@unbook/docs",
-  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "nuxt dev --extends docus",
@@ -8,9 +7,9 @@
   },
   "dependencies": {
     "@nuxt/ui": "4.4.0",
-    "better-sqlite3": "^12.5.0",
-    "docus": "latest",
-    "nuxt": "4.2.2",
+    "better-sqlite3": "12.6.2",
+    "docus": "5.4.4",
+    "nuxt": "4.3.0",
     "nuxt-studio": "1.2.0",
     "tailwindcss": "4.1.18"
   },

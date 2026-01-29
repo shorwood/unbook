@@ -29,69 +29,6 @@ function toSelectOptions(selectOptions: Schema.SelectOptions | undefined): Prope
 }
 
 /**
- * Converts Schema.StatusOptions to status options and groups for the API.
- *
- * @param statusOptions The status options from the schema field.
- * @returns An object containing options and groups arrays.
- */
-function toStatusOptionsAndGroups(statusOptions: Schema.StatusOptions | undefined): {
-  options: Property.StatusOption[]
-  groups: Property.StatusGroup[]
-} {
-  if (!statusOptions) return { options: [], groups: [] }
-
-  const options: Property.StatusOption[] = []
-  const groups: Property.StatusGroup[] = []
-
-  for (const [groupKey, group] of Object.entries(statusOptions)) {
-    const groupOptionIds: string[] = []
-    const groupOptions = group.options
-
-    // --- Convert options within this group
-    if (Array.isArray(groupOptions)) {
-      for (const name of groupOptions) {
-        const optionId = `${groupKey}_${name}`
-        groupOptionIds.push(optionId)
-        options.push({
-          id: optionId,
-          name,
-          color: group.color as StatusColor,
-        })
-      }
-    }
-    else {
-      for (const [optionKey, value] of Object.entries(groupOptions)) {
-        const optionId = `${groupKey}_${optionKey}`
-        groupOptionIds.push(optionId)
-        if (typeof value === 'string') {
-          options.push({
-            id: optionId,
-            name: value,
-            color: group.color as StatusColor,
-          })
-        }
-        else {
-          options.push({
-            id: optionId,
-            name: value.label ?? optionKey,
-            color: (value.color ?? group.color) as StatusColor,
-          })
-        }
-      }
-    }
-
-    groups.push({
-      id: groupKey,
-      name: group.label,
-      color: group.color as StatusColor,
-      option_ids: groupOptionIds,
-    })
-  }
-
-  return { options, groups }
-}
-
-/**
  * Converts a single Schema.Field to a property definition.
  *
  * @param field The field to convert.
@@ -183,5 +120,6 @@ export function toPropertyDefinition(field: Schema.Field): Property.DefinitionIn
   }
 
   // --- If we reach here, the field type is unsupported.
-  throw new Error(`Unsupported field type: ${(field).type}`)
+  // @ts-expect-error: ignore
+  throw new Error(`Unsupported field type: ${field.type}`)
 }

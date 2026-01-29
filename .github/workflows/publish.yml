@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    name: Deployment to Private Registry & NPM
+    name: Deployment to NPM
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
       # --- Install, build, and test.
       - run: pnpm install
       - run: pnpm build
-      - run: pnpm lint:ci
+      - run: pnpm lint
       - run: pnpm test:ci
 
       # --- Publish to NPM registry on main branch. (Only on tags)
