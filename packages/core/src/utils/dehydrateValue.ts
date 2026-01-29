@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-nested-conditional */
 /* eslint-disable unicorn/no-null */
 import type { Property, Schema } from '@/types'
 import { toRichText } from './toRichText'
@@ -96,8 +97,29 @@ export function dehydrateValue(
     const name = map.get(value as string) ?? value as string
     return { type: 'status', status: { name } }
   }
-  if (field.type === 'date')
-    return { type: 'date', date: value as null | { end?: null | string; start: string } }
+  if (field.type === 'date') {
+    if (value === null || value === undefined) return { type: 'date', date: null }
+
+    // --- Handle array format: [start, end?]
+    if (Array.isArray(value)) {
+      const [start, end] = value as [Date | string, (Date | string)?]
+      return {
+        type: 'date',
+        date: {
+          start: start instanceof Date ? start.toISOString() : start,
+          end: end ? (end instanceof Date ? end.toISOString() : end) : undefined,
+        },
+      }
+    }
+
+    // --- Handle single Date or string value.
+    return {
+      type: 'date',
+      date: {
+        start: value instanceof Date ? (value).toISOString() : value as string,
+      },
+    }
+  }
   if (field.type === 'checkbox')
     return { type: 'checkbox', checkbox: value as boolean }
   if (field.type === 'url')

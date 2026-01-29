@@ -71,11 +71,68 @@ describe('dehydrateValue', () => {
   })
 
   describe('date', () => {
-    it('should pass through date object', () => {
+    it('should return null date when value is null', () => {
       const field: Schema.Field = { label: 'Due Date', type: 'date' }
-      const dateValue = { start: '2024-01-15', end: '2024-01-20' }
-      const result = dehydrateValue(field, dateValue)
-      expect(result).toMatchObject({ type: 'date', date: dateValue })
+      const result = dehydrateValue(field, null)
+      expect(result).toMatchObject({ type: 'date', date: null })
+    })
+
+    it('should return null date when value is undefined', () => {
+      const field: Schema.Field = { label: 'Due Date', type: 'date' }
+      const result = dehydrateValue(field, undefined)
+      expect(result).toMatchObject({ type: 'date', date: null })
+    })
+
+    it('should convert Date object to ISO string', () => {
+      const field: Schema.Field = { label: 'Due Date', type: 'date' }
+      const date = new Date('2024-01-15T10:00:00.000Z')
+      const result = dehydrateValue(field, date)
+      expect(result).toMatchObject({
+        type: 'date',
+        date: { start: '2024-01-15T10:00:00.000Z' },
+      })
+    })
+
+    it('should pass through string date value', () => {
+      const field: Schema.Field = { label: 'Due Date', type: 'date' }
+      const result = dehydrateValue(field, '2024-01-15')
+      expect(result).toMatchObject({
+        type: 'date',
+        date: { start: '2024-01-15' },
+      })
+    })
+
+    it('should convert array with single Date to date range', () => {
+      const field: Schema.Field = { label: 'Due Date', type: 'date' }
+      const date = new Date('2024-01-15T10:00:00.000Z')
+      const result = dehydrateValue(field, [date])
+      expect(result).toMatchObject({
+        type: 'date',
+        date: { start: '2024-01-15T10:00:00.000Z' },
+      })
+    })
+
+    it('should convert array with two Dates to date range', () => {
+      const field: Schema.Field = { label: 'Due Date', type: 'date' }
+      const start = new Date('2024-01-15T10:00:00.000Z')
+      const end = new Date('2024-01-20T10:00:00.000Z')
+      const result = dehydrateValue(field, [start, end])
+      expect(result).toMatchObject({
+        type: 'date',
+        date: {
+          start: '2024-01-15T10:00:00.000Z',
+          end: '2024-01-20T10:00:00.000Z',
+        },
+      })
+    })
+
+    it('should convert array with string dates to date range', () => {
+      const field: Schema.Field = { label: 'Due Date', type: 'date' }
+      const result = dehydrateValue(field, ['2024-01-15', '2024-01-20'])
+      expect(result).toMatchObject({
+        type: 'date',
+        date: { start: '2024-01-15', end: '2024-01-20' },
+      })
     })
   })
 

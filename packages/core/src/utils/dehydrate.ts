@@ -31,7 +31,8 @@ export function dehydrate(
     const field = schema[key]
     if (!field || value === undefined) continue
     const propertyValue = dehydrateValue(field, value)
-    if (propertyValue) result[field.label] = propertyValue
+    if (propertyValue === undefined) continue
+    result[field.label] = propertyValue
   }
 
   // --- Return the dehydrated properties.
