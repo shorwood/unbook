@@ -9,7 +9,7 @@
     "pnpm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "turbo watch dev",
+    "dev": "turbo run dev --filter='!@unbook/docs'",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
