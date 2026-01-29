@@ -290,13 +290,13 @@ describe('toPropertyDefinition', () => {
   })
 
   describe('status field', () => {
-    it('should convert status without groups', () => {
+    it('should convert status to empty object (status options are read-only in Notion API)', () => {
       const field: Schema.Field = { label: 'Status', type: 'status' }
       const result = toPropertyDefinition(field)
-      expect(result).toMatchObject({ type: 'status', status: { options: [], groups: [] } })
+      expect(result).toMatchObject({ type: 'status', status: {} })
     })
 
-    it('should convert status with groups and array options', () => {
+    it('should ignore groups when converting status (status options are read-only in Notion API)', () => {
       const field: Schema.Field = {
         label: 'Status',
         type: 'status',
@@ -309,49 +309,7 @@ describe('toPropertyDefinition', () => {
       const result = toPropertyDefinition(field)
       expect(result).toMatchObject({
         type: 'status',
-        status: {
-          options: [
-            { id: 'todo_Not Started', name: 'Not Started', color: 'gray' },
-            { id: 'todo_Blocked', name: 'Blocked', color: 'gray' },
-            { id: 'inProgress_Working', name: 'Working', color: 'blue' },
-            { id: 'done_Completed', name: 'Completed', color: 'green' },
-          ],
-          groups: [
-            { id: 'todo', name: 'To Do', color: 'gray', option_ids: ['todo_Not Started', 'todo_Blocked'] },
-            { id: 'inProgress', name: 'In Progress', color: 'blue', option_ids: ['inProgress_Working'] },
-            { id: 'done', name: 'Done', color: 'green', option_ids: ['done_Completed'] },
-          ],
-        },
-      })
-    })
-
-    it('should convert status with groups and record options', () => {
-      const field: Schema.Field = {
-        label: 'Status',
-        type: 'status',
-        groups: {
-          todo: {
-            label: 'To Do',
-            color: 'gray',
-            options: {
-              notStarted: 'Not Started',
-              blocked: { label: 'Blocked', color: 'red' },
-            },
-          },
-        },
-      }
-      const result = toPropertyDefinition(field)
-      expect(result).toMatchObject({
-        type: 'status',
-        status: {
-          options: [
-            { id: 'todo_notStarted', name: 'Not Started', color: 'gray' },
-            { id: 'todo_blocked', name: 'Blocked', color: 'red' },
-          ],
-          groups: [
-            { id: 'todo', name: 'To Do', color: 'gray', option_ids: ['todo_notStarted', 'todo_blocked'] },
-          ],
-        },
+        status: {},
       })
     })
   })

@@ -135,12 +135,11 @@ export function toPropertyDefinition(field: Schema.Field): Property.DefinitionIn
   if (field.type === 'multi_select')
     return { type: 'multi_select', id, multi_select: { options: toSelectOptions(field.options) } }
 
-  // --- Status have nested groups and options. We must flatten them and
-  // --- perform similar conversion to select options to conform to the API.
-  if (field.type === 'status') {
-    const { options, groups } = toStatusOptionsAndGroups(field.groups)
-    return { type: 'status', id, status: { options, groups } }
-  }
+  // --- Status properties are read-only in Notion API - you cannot set
+  // --- options or groups when creating/updating. Just return an empty object.
+  if (field.type === 'status')
+    // @ts-expect-error: ignore
+    return { type: 'status', id, status: {} }
 
   // --- The rest of the types have extra parameters that are mapped 1:1.
   if (field.type === 'formula')

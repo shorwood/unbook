@@ -74,7 +74,7 @@ function toSchemaStatusOptions(
  * @param definition The property definition from the API.
  * @returns The schema field.
  */
-function toSchemaField(definition: Property.Definition): Schema.Field {
+function toSchemaField(definition: Property.Definition): Schema.Field | undefined {
   const id = decodeURIComponent(definition.id)
   const label = definition.name
 
@@ -154,9 +154,6 @@ function toSchemaField(definition: Property.Definition): Schema.Field {
       function: definition.rollup.function,
     }
   }
-
-  // @ts-expect-error: Exhaustiveness check.
-  throw new Error(`Unsupported property type: ${definition.type}`)
 }
 
 /**
@@ -187,7 +184,8 @@ export function inferSchema(
   // --- Convert each property definition to a schema field.
   for (const [, definition] of Object.entries(properties)) {
     const key = toCamelCase(definition.name)
-    result[key] = toSchemaField(definition)
+    const field = toSchemaField(definition)
+    if (field) result[key] = field
   }
 
   // --- Post-process formula fields to restore expressions with schema key references.
