@@ -1,6 +1,7 @@
 import type { Adapter } from '@/adapter'
 import type { BlockAppendOptions, BlockInput, BlockObject, BlockUpdateOptions } from '@/types'
 import { renderBlock } from '@/utils'
+import { Database } from './Database'
 import { DataSource } from './DataSource'
 import { Page } from './Page'
 import { User } from './User'
@@ -121,6 +122,46 @@ export class Block {
   async getLastEditor(): Promise<User> {
     const user = await this.adapter.getUser(this.object.last_edited_by.id)
     return new User(this.adapter, user)
+  }
+
+  /**********************************************************/
+  /* Casting                                                */
+  /**********************************************************/
+
+  /**
+   * Converts a `child_page` block to a `Page` entity. This method fetches the
+   * full page data from the adapter using the block's ID (which is the page ID
+   * for child_page blocks).
+   *
+   * @returns A promise that resolves to the `Page` entity.
+   * @throws Error if the block is not a `child_page` block.
+   * @example
+   * // Get a child page block and convert it to a Page.
+   * const page = await childPageBlock.asPage()
+   */
+  async asPage(): Promise<Page> {
+    if (this.object.type !== 'child_page')
+      throw new Error(`Cannot convert block of type '${this.object.type}' to a Page. Expected 'child_page'.`)
+    const pageData = await this.adapter.getPage(this.id)
+    return new Page(this.adapter, pageData)
+  }
+
+  /**
+   * Converts a `child_database` block to a `Database` entity. This method fetches
+   * the full database data from the adapter using the block's ID (which is the
+   * database ID for child_database blocks).
+   *
+   * @returns A promise that resolves to the `Database` entity.
+   * @throws Error if the block is not a `child_database` block.
+   * @example
+   * // Get a child database block and convert it to a Database.
+   * const database = await childDatabaseBlock.asDatabase()
+   */
+  async asDatabase(): Promise<Database> {
+    if (this.object.type !== 'child_database')
+      throw new Error(`Cannot convert block of type '${this.object.type}' to a Database. Expected 'child_database'.`)
+    const databaseData = await this.adapter.getDatabase(this.id)
+    return new Database(this.adapter, databaseData)
   }
 
   /**********************************************************/
