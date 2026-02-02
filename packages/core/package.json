@@ -1,7 +1,7 @@
 {
   "name": "@unbook/core",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "author": "Stanley Horwood <stanley.horwood@nanoworks.io>",
   "bugs": "https://github.com/shorwood/unbook/issues",
