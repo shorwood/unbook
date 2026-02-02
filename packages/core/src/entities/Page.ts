@@ -1,5 +1,8 @@
+import type { MaybePromise } from '@unshared/types'
 import type { Adapter } from '@/adapter'
 import type { BlockAppendOptions, BlockInput, Client, PageObject } from '@/types'
+import type { MaybeRichText } from '@/utils'
+import type { Database } from './Database'
 import { renderPageTitle, toFileInput, toIconInput, toTitleProperties } from '@/utils'
 import { Block } from './Block'
 import { DataSource } from './DataSource'
@@ -145,6 +148,157 @@ export class Page {
   async getLastEditor(): Promise<User> {
     const user = await this.adapter.getUser(this.object.last_edited_by.id)
     return new User(this.adapter, user)
+  }
+
+  /**********************************************************/
+  /* Child Entities                                         */
+  /**********************************************************/
+
+  /**
+   * Gets all child pages of this page. This method iterates through the page's
+   * children and yields `Page` entities for blocks of type `child_page`.
+   *
+   * @yields The child pages as an async iterable of `Page` entities.
+   * @example
+   * // Iterate over child pages.
+   * for await (const childPage of page.getChildPages()) {
+   *   console.log(childPage.title)
+   * }
+   */
+  async * getChildPages(): AsyncIterable<Page> {
+    for await (const block of this.getChildren()) {
+      if (block.type === 'child_page')
+        yield await block.asPage()
+    }
+  }
+
+  /**
+   * Gets all child databases of this page. This method iterates through the page's
+   * children and yields `Database` entities for blocks of type `child_database`.
+   *
+   * @yields The child databases as an async iterable of `Database` entities.
+   * @example
+   * // Iterate over child databases.
+   * for await (const childDatabase of page.getChildDatabases()) {
+   *   console.log(childDatabase.title)
+   * }
+   */
+  async * getChildDatabases(): AsyncIterable<Database> {
+    for await (const block of this.getChildren()) {
+      if (block.type === 'child_database')
+        yield await block.asDatabase()
+    }
+  }
+
+  /**
+   * Finds a child page that matches the given filter function. This method
+   * iterates through the page's children and returns the first `Page` entity
+   * that satisfies the filter predicate.
+   *
+   * @param filter A function that takes a `Page` and returns a boolean or a promise resolving to a boolean.
+   * @returns A promise that resolves to the matching `Page`, or `undefined` if no match is found.
+   * @example
+   * // Find a child page by title.
+   * const childPage = await page.findPage(p => p.title === 'My Child Page')
+   *
+   * // Find a child page with an async filter.
+   * const childPage = await page.findPage(async p => {
+   *   const content = await p.render()
+   *   return content.includes('specific text')
+   * })
+   */
+  async findPage(filter: (page: Page) => MaybePromise<boolean>): Promise<Page | undefined> {
+    for await (const childPage of this.getChildPages()) {
+      if (await filter(childPage))
+        return childPage
+    }
+  }
+
+  /**
+   * Find mutiple child pages that match the given filter function. This method
+   * iterates through the page's children and returns an array of `Page` entities
+   * that satisfy the filter predicate.
+   *
+   * @param filter A function that takes a `Page` and returns a boolean or a promise resolving to a boolean.
+   * @returns A promise that resolves to an array of matching `Page` entities.
+   * @example
+   * // Find child pages by title.
+   * const childPages = await page.findPages(p => p.title.startsWith('Chapter'))
+   *
+   * // Find child pages with an async filter.
+   * const childPages = await page.findPages(async p => {
+   *   const content = await p.render()
+   *   return content.includes('important section')
+   * })
+   */
+  async findPages(filter: (page: Page) => MaybePromise<boolean>): Promise<Page[]> {
+    const results: Page[] = []
+    for await (const childPage of this.getChildPages()) {
+      if (await filter(childPage))
+        results.push(childPage)
+    }
+    return results
+  }
+
+  /**
+   * Finds a child database that matches the given filter function. This method
+   * iterates through the page's children and returns the first `Database` entity
+   * that satisfies the filter predicate.
+   *
+   * @param filter A function that takes a `Database` and returns a boolean or a promise resolving to a boolean.
+   * @returns A promise that resolves to the matching `Database`, or `undefined` if no match is found.
+   * @example
+   * // Find a child database by title.
+   * const childDatabase = await page.findDatabase(db => db.title === 'My Database')
+   */
+  async findDatabase(filter: (database: Database) => MaybePromise<boolean>): Promise<Database | undefined> {
+    for await (const childDatabase of this.getChildDatabases()) {
+      if (await filter(childDatabase))
+        return childDatabase
+    }
+  }
+
+  /**
+   * Find mutiple child databases that match the given filter function. This method
+   * iterates through the page's children and returns an array of `Database` entities
+   * that satisfy the filter predicate.
+   *
+   * @param filter A function that takes a `Database` and returns a boolean or a promise resolving to a boolean.
+   * @returns A promise that resolves to an array of matching `Database` entities.
+   * @example
+   * // Find child databases by title.
+   * const childDatabases = await page.findDatabases(db => db.title.includes('Project'))
+   */
+  async findDatabases(filter: (database: Database) => MaybePromise<boolean>): Promise<Database[]> {
+    const results: Database[] = []
+    for await (const childDatabase of this.getChildDatabases()) {
+      if (await filter(childDatabase))
+        results.push(childDatabase)
+    }
+    return results
+  }
+
+  /**
+   * Creates a new child page under this page.
+   *
+   * @param title The title of the new page.
+   * @param options Additional options for creating the page.
+   * @returns A promise that resolves to the newly created `Page` entity.
+   * @example
+   * // Create a simple child page.
+   * const newPage = await page.appendPage('New Child Page')
+   *
+   * // Create a child page with an icon.
+   * const newPage = await page.appendPage('New Child Page', { icon: '📄' })
+   */
+  async appendPage(title: MaybeRichText, options?: Omit<Client.Page.CreateOptions, 'parent'>): Promise<Page> {
+    const pageObject = await this.adapter.createPage({
+      parent: { page_id: this.id },
+      properties: toTitleProperties(title),
+      icon: toIconInput(options?.icon),
+      cover: toFileInput(options?.cover),
+    })
+    return new Page(this.adapter, pageObject)
   }
 
   /**********************************************************/
